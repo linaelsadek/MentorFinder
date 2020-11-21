@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html>	     
+	<head>
+		<title>Milestone 4</title>
+        <meta charset="UTF-8">
+        <!-- Load React. -->
+        <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
+        <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+        <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>	
+        <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+        <link rel="stylesheet" href="css/style.css" />
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+       
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>   
+	</head>
+	<body>
+        <div id="root"></div>
+        <script type="text/babel">
+
+            //URL Parameters Data
+            const search = window.location.search; // returns the URL query String
+            const params = new URLSearchParams(search);
+           
+            //Header Section Info
+            const profileLogo = 'photos/profile.png';
+            const applicationLogo = 'photos/logo.png';            
+
+            //Mentors Data
+            const mentorDataConst = [
+                {
+                    "Id":"001",
+                    "mentorName": "Mike Wazowski",
+                    "profilePic":"photos/mentor1.png",
+                    "text": "Mike teaches UI/UX backed by years of experience.",               
+                    "rating": "2",
+                    "hour":"35",
+                    "role":"Consultant",
+                    "longDescription":"With experience over 5 years working as a UX designer. My professional experience has given me a solid understanding of the ins and outs of interface prototyping. I will teach you to to create UI/UX mockups and clickable design prototypes for web, mobile, and descktop apps.",  
+                    "institution":"mcmaster",
+                    "faculty":"engineering",
+                    "department":"cas",
+                    "course":"compsci 4hc3"
+                },
+                {
+                    "Id":"002",
+                    "mentorName": "Karen Hunt",
+                    "profilePic":"photos/mentor2.jpg",
+                    "text": "Karen teaches vital skills in interface design.",                
+                    "rating":"4",
+                    "hour":"40",
+                    "role":"Desinger",
+                    "longDescription":"With experience over 15 years working as a UX designer. My professional experience has given me a solid understanding of the ins and outs of interface prototyping. I will teach you to to create UI/UX mockups and clickable design prototypes for web, mobile, and descktop apps.",    
+                    "institution":"mcmaster",
+                    "faculty":"engineering",
+                    "department":"cas",
+                    "course":"compsci 4hc3"
+                },
+
+                {
+                    "Id":"003",
+                    "mentorName": "Sal Yassi",
+                    "profilePic":"photos/mentor3.jpg",
+                    "text": "Sal mentors in practical interface prototyping.",                 
+                    "rating":"3",
+                    "hour":"50",
+                    "role":"Senior UI/UX designer",
+                    "longDescription":"Senior UX Designer with experience over 10 years working as a UX designer. My professional experience has given me a solid understanding of the ins and outs of interface prototyping. I will teach you to to create UI/UX mockups and clickable design prototypes for web, mobile, and descktop apps.",   
+                    "institution":"mcmaster",
+                    "faculty":"engineering",
+                    "department":"cas",
+                    "course":"compsci 4hc3"
+                }
+            
+            ]
+
+            //Mentors' Comments
+            const MentorCommentsConst = [
+                {
+                    "commentId":"c001",
+                    "mentorId":"001",
+                    "name":"Joseph",
+                    "comment":"This mentor was not punctual and did not explain UI/UX prototyping well",
+                    "rating":"3"
+                },
+                {
+                    "commentId":"c002",
+                    "mentorId":"001",
+                    "name":"Alice",
+                    "comment":"Mike is a nice guy, but did not focus on the important things and I failed the class.",
+                    "rating":"2"
+                },
+                {
+                    "commentId":"c003",
+                    "mentorId":"002",
+                    "name":"Jessica",
+                    "comment":"This mentor is one that I would recommend to anyone looking to have classes in UI/UX prototyping",
+                    "rating":"4"
+                },
+                {
+                    "commentId":"c004",
+                    "mentorId":"002",
+                    "name":"Alvin",
+                    "comment":"Karen did a great job teaching me UX design for my COMPSCI course. Highly recommended.",
+                    "rating":"5"
+                },
+                {
+                    "commentId":"c005",
+                    "mentorId":"003",
+                    "name":"Stephen",
+                    "comment":"This mentor is one that I would recommend to anyone looking to have classes in UI/UX prototyping",
+                    "rating":"4"
+                },
+                {
+                    "commentId":"c006",
+                    "mentorId":"003",
+                    "name":"Beth",
+                    "comment":"Sal did a great job teaching me UX design for my COMPSCI course. Highly recommended.",
+                    "rating":"3"
+                }
+
+            ]
+            
+            //Filters Data - Budget
+            const filtersBudget = [
+                {
+                    filterCategory: 'Budget',
+                    filterContent: ['$10-$20 /hr', '$30-$50 /hr', '> $50 /hr'],
+                }
+            ]
+
+            //Filters Data - Rating
+            const filtersRating = [
+                {
+                    "filterCategory": "Rating",
+                    "filterContent": [
+                            {"name":"4 & up", "value":"4"}, 
+                            {"name":"3 & up", "value":"3"}, 
+                            {"name":"2 & up", "value":"2"}, 
+                            {"name":"1 & up", "value":"1"} 
+                        ]
+                }
+            ]
+
+            //Sorting Data
+            const sort = [
+                {"name":"Name: A to Z", "value":"1"},
+                {"name":"Name: Z to A", "value":"2"},
+                {"name":"Price: Low to High", "value":"3"},
+                {"name":"Price: High to Low", "value":"4"},
+                {"name":"Rating", "value":"5"},
+            ]
+
+            //App class will be the entry point for each page in the application
+            class App extends React.Component
+            {
+                constructor(props)
+                {
+                    super(props);
+                }
+                
+
+                render()
+                {
+                    
+
+                    return <div>
+                        <HeaderSection />
+                        <BodySection />
+                        <FooterSection />
+                    </div>
+                }
+            }
+
+            //HeaderSection class displays the top banner of the page. It has:
+            //1) The Logged in user's logo and name
+            //2) The logo of the application
+            class HeaderSection extends React.Component
+            {
+                constructor(props)
+                {
+                    super(props);
+                }
+
+                render()
+                {
+                    var headerToRender;
+
+                    headerToRender = <div className="headerContainer">
+                            <div className="row"><div className="header col-md-12"></div></div>
+                            <div className="headerElements row">
+                                <div className="col-md-1 col-lg-1"></div>
+                                <div className="col-md-3 col-lg-3">
+                                    <img className="headerLogo" src={profileLogo}/>
+                                    <label className="headerLabel">Test User</label>
+                                </div>
+                                <div className="col-md-3 col-lg-3"> </div>
+                                <div className="col-md-3 col-lg-3">
+                                    <a href="./index.html">
+                                        <img className="applicationLogo" src={applicationLogo}/>
+                                    </a>
+                                </div>
+                                <div className="col-md-2 col-lg-2"></div>
+                            </div>
+                        </div>
+                    return headerToRender;
+                }
+            }
+
+            //BodySection class is intended to prepare/load the data and pass it to MentorList subclass
+            class BodySection extends React.Component
+            {
+                constructor(props)
+                {
+                    super(props);
+                }
+
+                render()
+                {
+                    var bodyToRender;
+
+                    bodyToRender = <div className="bodyContainer">
+                        <div className="row">
+                            <div className="col-md-12">
+                                <h2 className="text-center">Browse Available Mentors</h2>
+                            </div>
+                        </div>
+                        <MentorList  mentorData = {this.getMentorsBasedOnParams()} commentData={MentorCommentsConst}/>                                                                                                 
+                    </div>
+
+                    return bodyToRender;
+
+                }
+
+                /**
+                * GetMentorsBasedOnParams will get all parameters from the url and filter the mentors data set
+                * based on the provided parameters. If a server was attached, this would be equivalent to passing in
+                * the filter parameters to a database procedure to return a data subset
+                */
+                getMentorsBasedOnParams()
+                {
+                    //This would replace a database call 
+                    var institution = params.get("institution");
+                    var faculty = params.get("faculty");
+                    var department = params.get("department");
+                    var course = params.get("course");
+                    var minBug = parseInt(params.get("minBug"));
+                    var maxBug = parseInt(params.get("maxBug"));
+
+                    var mentorDataPlaceHolder = mentorDataConst;
+
+                    
+                    if (institution !== null)
+                    {
+                        //reformat string to be all lower case
+                        institution = institution.toLowerCase();
+                        mentorDataPlaceHolder = mentorDataPlaceHolder.filter((mentor) => mentor.institution == institution);
+                    }
+                        
+
+                    if (faculty !== null)
+                    {
+                        faculty = faculty.toLowerCase();
+                        mentorDataPlaceHolder = mentorDataPlaceHolder.filter((mentor) => mentor.faculty == faculty);
+                    }
+                        
+
+                    if (department !== null)
+                    {
+                        department = department.toLowerCase();
+                        mentorDataPlaceHolder = mentorDataPlaceHolder.filter((mentor) => mentor.department == department);
+                    }
+
+                    if (course !== null)
+                    {
+                        course = course.toLowerCase();
+                        mentorDataPlaceHolder = mentorDataPlaceHolder.filter((mentor) => mentor.course.includes(course));
+                    }    
+
+                    if ((minBug !== null) && (!Number.isNaN(minBug))) 
+                    {
+                        //parse string to be an integer
+                        minBug = parseInt(minBug);
+                        mentorDataPlaceHolder = mentorDataPlaceHolder.filter((mentor) => mentor.hour >= minBug);
+                    }    
+                    
+                    if ((maxBug !== null) && (!Number.isNaN(maxBug)))
+                    {
+                        maxBug = parseInt(maxBug);
+                        mentorDataPlaceHolder = mentorDataPlaceHolder.filter((mentor) => mentor.hour <= maxBug);
+                    }    
+
+                    return mentorDataPlaceHolder;
+                }
+            }
+
+            //MentorList class creates the following components
+            //1) Search bar
+            //2) Filters section
+            //3) List of mentors
+            //4) Sort dropdon
+            class MentorList extends React.Component
+            {
+                constructor(props)
+                {
+                    super(props);
+                    this.state= {
+                        mentorData: this.props.mentorData,
+                        commentData: this.props.commentData,
+                        searchName:"",
+                        filterCategory:"",
+                        filterValue:""
+                    }
+                   
+                }
+
+                render()
+                {
+                    var mentorsToRender;
+
+                    mentorsToRender = <div>
+                            <div className="row">
+                                <div className="col-md-1"></div>
+                                <div className="col-md-2"></div>
+                                <div className="col-md-6">
+                                    <div className="form-group">
+                                        <input className="form-control seachBar" type="text" placeholder="Search for mentor by name" onChange={(e) => this.searchForMentors(e)} value={this.state.searchName}/>
+                                    </div>
+                                </div>
+                                <div className="col-md-2"> </div>
+                                <div className="col-md-1"></div>
+                            </div>
+                            <div className="row">
+                                <div className="col-md-1"></div>
+                                <div className="col-md-2">
+                                    <div className="filterContainer">
+                                        <div className="row">
+                                            <div className="col-md-2"></div>
+                                            <div className="col-md-8"> <h4 className="filterHeader text-center">Filters</h4> </div>
+                                            <div className="col-md-2"></div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col-md-2"></div>
+                                            <div className="col-md-9">
+                                                {
+                                                    filtersBudget.map(
+                                                        (budget) =>
+                                                        <div key={budget.filterCategory} className="row">
+                                                            <div className="col-md-12">
+                                                                <div className="row">
+                                                                    <div className="col-md-12">
+                                                                        <h5>{budget.filterCategory}</h5>
+                                                                    </div>
+                                                                </div>
+                                                                {
+                                                                    budget.filterContent.map(
+                                                                        (content) =>
+                                                                        <div key={content} className="row">
+                                                                            <div className="col-md-12">
+                                                                                <button type="button" className="btn btn-link" onClick={this.filterByBudget.bind(this, content)}>{content}</button>                                                                               
+                                                                            </div>
+                                                                        </div>
+                                                                    )                                                                   
+                                                                }                                                               
+                                                            </div>
+                                                        </div>
+                                                    )
+                                                } 
+                                            </div>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col-md-2"></div>
+                                            <div className="col-md-9">
+                                                {
+                                                    filtersRating.map(
+                                                        (rate) =>
+                                                        <div key={rate.filterCategory} className="row">
+                                                            <div className="col-md-12">
+                                                                <div className="row">
+                                                                    <div className="col-md-12">
+                                                                        <h5>{rate.filterCategory}</h5>
+                                                                    </div>
+                                                                </div>
+                                                                {
+                                                                    rate.filterContent.map(
+                                                                        ({name, value}) =>
+                                                                        <div key={name} className="row">
+                                                                            <div className="col-md-12">
+                                                                                <button type="button" className="btn btn-link" onClick={this.filterByRating.bind(this, value)}>
+                                                                                    {this.createStarRating(name, value)}
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    )                                                                   
+                                                                }
+                                                                
+                                                            </div>
+                                                        </div>
+                                                    )
+                                                } 
+                                            </div>
+                                            <div className="col-md-1"></div>
+                                            <br/>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col-md-2"></div>
+                                            <div className="col-md-8"> <button className="btn" onClick={this.clearFilters.bind(this)}>Clear</button> </div>
+                                            <div className="col-md-2"></div>
+                                            <br/>
+                                            <br/>
+                                        </div>
+                                    </div>                                   
+                                </div>
+                                <div className="col-md-5">
+                                    <div>
+                                        {
+                                            this.state.mentorData.map(
+                                                (data) => 
+                                            
+                                            <div key={data.mentorName}> 
+                                                <MentorItem
+                                                    Id = {data.Id}
+                                                    profilePic = {data.profilePic}
+                                                    mentorName = {data.mentorName}
+                                                    text = {data.text}
+                                                    rating = {data.rating}
+                                                    hour = {data.hour}
+                                                    role = {data.role}
+                                                    longDescription = {data.longDescription}
+                                                    comments = {this.getComments(data.Id)}
+                                                    />
+                                            </div>                                           
+                                            )
+
+                                          
+                                        }
+                                    </div>
+                                </div>
+                                <div className="col-md-2">
+                                    <select value="Sort" name="Sort" className="form-control sortDropDown" onChange={(e) => this.changeSelection(e)}>
+                                        <option value="Sort" >Sort</option>
+                                        {
+                                            sort.map(
+                                                (optn) =>
+                                                <option key={optn.value} value={optn.value}>{optn.name}</option> 
+                                            )
+                                            
+                                        }
+                                    </select>
+                                </div>
+                                <div className="col-md-2"></div>
+                            </div>
+                        </div>
+
+                    
+
+                    return mentorsToRender;
+                }
+
+                
+                //This function is responsible for searching for mentors
+                searchForMentors(e)
+                {
+                    var nextState = this.state;
+                    
+                    //record the search name from the input field
+                    nextState.searchName = e.target.value;
+
+                    if (nextState.searchName == "") //user removed search
+                        nextState.mentorData = this.props.mentorData; //return back to props value
+                    else
+                        nextState.mentorData = nextState.mentorData.filter(({mentorName}) => mentorName.toLowerCase().includes(nextState.searchName.toLowerCase()));
+
+                    this.setState(nextState);
+
+                }
+
+                //This function will filter the mentors' list according to the selected filter
+                //in the Filters section
+                filterByBudget(cnt)
+                {
+                    var strSelection = cnt;
+                    var splitSelection;
+                    var nextState = this.state;
+
+                    strSelection = strSelection.replaceAll("$", ""); //remove the dollar signs
+                    strSelection = strSelection.replace(" /hr", ""); //remove the uom
+                    strSelection = strSelection.replace("> ", ""); //remove the uom
+
+                    nextState.mentorData = this.props.mentorData;
+
+                    //This tests if the selected filter includes a range minAmount-maxAmount 
+                    if (strSelection.includes("-"))
+                    {
+                        splitSelection = strSelection.split("-");
+                        nextState.mentorData = nextState.mentorData.filter(({hour}) => (hour >= parseInt(splitSelection[0]) & hour <= parseInt(splitSelection[1])));
+                    }
+                    else
+                    {
+                        nextState.mentorData = nextState.mentorData.filter(({hour}) => (hour >= parseInt(strSelection)));
+                    }                 
+                    
+                    this.setState(nextState);
+
+                }
+
+                //This function will filter the mentors' list according to the selected rating
+                //in the Filters section 
+                filterByRating(rating)
+                {
+                    var ratingInt = parseInt(rating);
+                    var nextState = this.state;
+                   
+                    nextState.mentorData = this.props.mentorData;
+                    nextState.mentorData = nextState.mentorData.filter(({rating}) => (rating >= ratingInt));                             
+                    
+                    this.setState(nextState);
+
+                }
+
+                //This function will create the starRating in Filters section
+                //Opted to encapsulated it in a function to enhance readability of the code and
+                //potentially allow for reuse later on during implementation phase
+                createStarRating(name, Id)
+                {
+                    var numOfStarsChecked = parseInt(Id);
+                    var htmltorender = '';
+
+                    for(var i = 0; i< 5; i++)
+                    {
+                        if (i < numOfStarsChecked)
+                            htmltorender += '<span class="fa fa-star star-filter checked"></span>'
+                        else
+                            htmltorender += '<span class="fa fa-star star-filter"></span>'
+                    }
+
+                    htmltorender += '<span> & up</span>'
+
+                    return <div dangerouslySetInnerHTML={{__html: htmltorender}} /> ;
+                }
+
+                //This function will handle the sorting option chosen
+                changeSelection(e)
+                {
+                    var select = e.target;
+                    var value = select.options[select.selectedIndex].getAttribute("value");
+                    var nextState = this.state;
+
+                    if (value == "1") //Sort from A to Z
+                        nextState.mentorData = nextState.mentorData.sort((a,b) => a.mentorName.toLowerCase() > b.mentorName.toLowerCase() ? 1:-1);
+                    else if (value =="2") //Sort from Z to A
+                        nextState.mentorData = nextState.mentorData.sort((a,b) => b.mentorName.toLowerCase() > a.mentorName.toLowerCase() ? 1:-1);
+                    else if(value =="3") //Sort price low to high
+                        nextState.mentorData = nextState.mentorData.sort((a,b) => a.hour - b.hour);
+                    else if (value == "4") //sort price high to low
+                        nextState.mentorData = nextState.mentorData.sort((a,b) => b.hour - a.hour);
+                    else if (value == "5") //sort rating
+                        nextState.mentorData = nextState.mentorData.sort((a,b) => b.rating - a.rating);
+                    else //return to default which is from A to Z
+                        nextState.mentorData = nextState.mentorData.sort((a,b) => a.mentorName.toLowerCase() - b.mentorName.toLowerCase() ? 1:-1);
+                   
+                    this.setState(nextState);
+                }
+
+                clearFilters()
+                {
+                    var nextState = this.state;
+                    nextState.mentorData = this.props.mentorData;
+                    nextState.searchName = "";
+                    nextState.filterCategory= "";
+                    nextState.filterValue = "";
+                    this.setState(nextState);
+                }
+
+                //This function returns the list of comments available for each mentor
+                //It is used to pass the data to MentorItem class
+                getComments(Id)
+                {
+                    return this.state.commentData.filter(({mentorId}) => (mentorId == Id));
+                }
+            }
+
+            //MentorItem class creates each mentor item in the list
+            //It's encapsulated in a class of its own because each mentor item
+            //has several components to be displayed and different interactions
+            //within it. The aim was to decouple the code as much as possible
+            //and also enhance readability for future use
+            class MentorItem extends React.Component
+            {
+                constructor(props)
+                {
+                    super(props);
+                    this.state = {
+                        Id : this.props.Id,
+                        profilePic : this.props.profilePic,
+                        mentorName : this.props.mentorName,
+                        hour : this.props.hour,
+                        text : this.props.text,
+                        rating : this.props.rating,
+                        role: this.props.role,
+                        longDescription: this.props.longDescription,
+                        comments:this.props.comments,
+                        newRating:'',
+                        newComment:''
+                    }
+
+                    this.textInput = React.createRef();
+                }
+
+                render()
+                {
+                    return(
+                        <div className="mentorContainer">
+                            <div className="modal fade" id={"profileModal"+this.state.Id} tabIndex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+                                <div className="modal-dialog">
+                                    <div className="modal-content">
+                                        <div className="modal-header">
+                                            <div className="row">
+                                                <div className="col-md-3">
+                                                    <img className="profileThumbnailCirle"
+                                                        src={this.state.profilePic}
+                                                    />
+                                                </div>
+                                                <div className="col-md-8">
+                                                    <h4 className="mentorName">{this.state.mentorName}</h4>
+                                                    {this.createStarRating(this.state.rating)}
+                                                    <h5 className="mentorHourlyLeft">${this.state.hour}/hr</h5>                                                   
+                                                </div>
+                                                <div className="col-md-1">
+                                                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                            </div>                                            
+                                        </div>
+                                        <div className="modal-body">
+                                            <div className="row">
+                                                <div className="col-12">
+                                                    <h6 className="mentorRole">{this.state.role}</h6>    
+                                                </div>
+                                            </div>
+                                            <div className="row">
+                                                <div className="col-12">
+                                                    <p className="mentorLongDescription">{this.state.longDescription}</p>    
+                                                </div>
+                                            </div>
+                                            <hr/>
+                                            <h6>Top Reviews</h6>
+                                            <hr/>
+                                            <div className="commentsDiv">
+                                                {
+                                                    this.state.comments.map(
+                                                        (comment) =>
+                                                       
+                                                        <div key={comment.commentId} className="row">
+                                                            <div className="col-md-12">
+                                                                <div  className="row">
+                                                                    <div className="col-md-3">
+                                                                        <h6 className="commenterName">{comment.name}</h6>
+                                                                    </div>
+                                                                    <div className="col-md-9">
+                                                                        {this.createStarRating(comment.rating)}
+                                                                    </div>
+                                                                </div>
+                                                                <div  className="row">
+                                                                    <div className="col-md-11">
+                                                                        <p className="commentParagraph">{comment.comment}</p>
+                                                                    </div>
+                                                                    <div className="col-md-1"></div>
+                                                                </div>
+                                                                <hr/>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                    )                                                                   
+                                                }
+                                            </div>
+                                            <h6>Review Mentor</h6>
+                                            <hr/>
+                                            <div className="row">
+                                                <div className="col-md-12">
+                                                    <div  className="row">
+                                                        <div className="col-md-12">
+                                                           {this.createStarRatingReview()}
+                                                        </div>
+                                                    </div>
+                                                    <div  className="row">
+                                                        <div className="col-md-12">
+                                                            <input type="text" id="commentInput" ref={this.textInput} className="form-control" placeholder="Enter Comment" onChange={this.saveComment.bind(this)}/>
+                                                        </div>
+                                                    </div>
+                                                    <div  className="row">
+                                                        <div className="col-md-12">
+                                                            <button type="button" className="btn btn-secondary btn-sm" onClick={this.submitComment.bind(this)}>Comment</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <hr/>
+                                            </div>
+                                        </div>
+                                        <div className="modal-footer">
+                                            <div  className="row">
+                                                <div className="col-md-4"></div>
+                                                <div className="col-md-5">
+                                                    <a type="button" className="btn btn-secondary" target="_blank"  href={"./hirementor.html?mentor="+this.state.mentorName+" &rate="+this.state.hour}>Hire Me</a>
+                                                </div>
+                                                <div className="col-md-3"></div>
+                                            </div>                                          
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                            <div className="row">
+                                <div className="col-md-3">
+                                    <img className="profileThumbnail"
+                                        src={this.state.profilePic}
+                                    />
+                                </div>
+                                <div className="col-md-9">
+                                    <div className="row">
+                                        <div className="col-md-8"> <h4 className="mentorName">{this.state.mentorName}</h4></div>
+                                        <div className="col-md-3"><h4 className="mentorHourly">${this.state.hour}/hr</h4></div>
+                                        <div className="col-md-1"></div>    
+                                    </div>
+
+                                    <div className="row">
+                                        <div className="col-md-12"> <p>{this.state.text}</p></div> 
+                                    </div>                               
+                                    <div className="row">
+                                        <div className="col-md-4"> {this.createStarRating(this.state.rating)}</div>
+                                        <div className="col-md-7"><button className="profileBtn" data-toggle="modal" data-target={"#profileModal"+this.state.Id}>Read More</button></div>
+                                        <div className="col-md-1"></div>  
+                                    </div>                                                            
+                                </div>
+                            </div>
+                        </div>
+                    )        
+
+                }
+               
+                //This function will create the starRating in Filters section
+                createStarRating(Id)
+                {
+                    var numOfStarsChecked = parseInt(Id);
+                    var htmltorender = '';
+
+                    for(var i = 0; i< 5; i++)
+                    {
+                        if (i < numOfStarsChecked)
+                            htmltorender += '<span class="fa fa-star checked"></span>'
+                        else
+                            htmltorender += '<span class="fa fa-star"></span>'
+                    }
+                    return <div dangerouslySetInnerHTML={{__html: htmltorender}} /> ;
+                }
+
+                //This function allows users to rate mentors based on the user's experience
+                createStarRatingReview()
+                {
+                    var htmltorender;
+                    var rating = this.state.newRating;
+
+                    
+
+                    htmltorender = [...Array(+5).keys()].map(
+                        n => {
+                            if (n < rating)
+                                return (
+                                    <span
+                                    key={n+1} 
+                                    className="fa fa-star checked" 
+                                    data-rating={n+1} 
+                                    onClick={this.rateMentor.bind(this, (n+1))}>
+                                    </span>
+                                )
+                            else
+                                return (
+                                    <span
+                                    key={n+1} 
+                                    className="fa fa-star" 
+                                    data-rating={n+1} 
+                                    onClick={this.rateMentor.bind(this, (n+1))}>
+                                    </span>
+                                )
+                        }
+
+                    )
+                    return htmltorender ;
+                }
+
+                //This function records the new added rating and saves it in newRating state
+                rateMentor(Id)
+                {
+                    var nextState = this.state;
+                    nextState.newRating = Id;
+                    this.setState(nextState);
+                }
+
+                //This function records the new added comment and saves it in newComment state
+                saveComment(e)
+                {
+                    var nextState = this.state
+                    nextState.newComment = e.target.value;
+                    this.setState(nextState);
+                }
+
+                //This function adds the new rating and/or new comment to the dataset for the intended mentor
+                //It also calculates the new rating of that mentor 
+                submitComment()
+                {
+                    var nextState = this.state
+                    var newComment = [];
+                    var calcRating;
+                    var lastCommentId = nextState.comments[nextState.comments.length-1].commentId;
+                    var placeholder = lastCommentId[lastCommentId.length-1];
+                    newComment = {
+                        "commentId":"c00"+ (parseInt(placeholder)+1),
+                        "mentorId" : nextState.Id,
+                        "name": "Test User",
+                        "comment" : nextState.newComment,
+                        "rating":nextState.newRating
+                    }
+                    
+                    nextState.comments.push(newComment);
+
+                    //Calculate new Overall rating
+                    calcRating = nextState.comments.reduce((sumVal, currItem) => sumVal + parseInt(currItem.rating), 0);
+                    if(nextState.comments.length != 0)
+                        calcRating = Math.floor(calcRating/(nextState.comments.length));
+                    nextState.rating = calcRating;
+
+                    //Reset the newComment and newRating for later use
+                    nextState.newComment = '';
+                    nextState.newRating = ''
+                    this.textInput.current.value = "";
+
+                    this.setState(nextState);
+                }
+
+            } 
+            
+            //FooterSection class is for cosmetics only. It creates a small banner at the bottom of the page
+            class FooterSection extends React.Component{
+                constructor(props)
+                {
+                    super(props);
+                }
+
+                render()
+                {
+                    var footerToRender;
+
+                    footerToRender = <footer className="footerContainer">
+                        <div className="row"><div className="footer col-md-12"></div></div>
+                    </footer>;
+                    
+                    return footerToRender;
+                }
+            }
+            
+            ReactDOM.render(
+                <App/>,
+                document.getElementById('root')
+            );
+        </script>
+    </body>
+</html>    

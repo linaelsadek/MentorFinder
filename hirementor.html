@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html>	     
+	<head>
+		<title>Milestone 4</title>
+        <meta charset="UTF-8">
+        <!-- Load React. -->
+        <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
+        <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+        <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>	
+        <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+        <link rel="stylesheet" href="css/style2.css" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+       
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+    
+	</head>
+	<body>
+        <div id="root2"></div>
+        <script type="text/babel">
+
+            //URL Parameters Data
+            const search = window.location.search; // returns the URL query String
+            const params = new URLSearchParams(search); 
+            const mentorFromURL = params.get('mentor');
+            const rateFromURL = parseInt(params.get('rate'));
+            
+            //Header Section Info
+            const profileLogo = 'photos/profile.png';
+            const applicationLogo = 'photos/logo.png';   
+
+            //App class will be the entry point for each page in the application           
+            class App extends React.Component
+            {
+                constructor(props)
+                {
+                    super(props);
+                }
+                
+
+                render()
+                {
+                    
+
+                    return <div>
+                        <HeaderSection />
+                        <BodySection  mentorName={mentorFromURL} mentorRate={rateFromURL}/>
+                        <FooterSection />
+                    </div>
+                }
+            }
+
+            //HeaderSection class displays the top banner of the page. It has:
+            //1) The Logged in user's logo and name
+            //2) The logo of the application
+            class HeaderSection extends React.Component
+            {
+                constructor(props)
+                {
+                    super(props);
+                }
+
+                render()
+                {
+                    var headerToRender;
+
+                    headerToRender = <div className="headerContainer">
+                            <div className="row"><div className="header col-md-12"></div></div>
+                            <div className="headerElements row">
+                                <div className="col-md-1 col-lg-1"></div>
+                                <div className="col-md-3 col-lg-3">
+                                    <img className="headerLogo" src={profileLogo}/>
+                                    <label className="headerLabel">Test User</label>
+                                </div>
+                                <div className="col-md-3 col-lg-3"> </div>
+                                <div className="col-md-3 col-lg-3">
+                                    <a href="./index.html">
+                                        <img className="applicationLogo" src={applicationLogo}/>
+                                    </a>
+                                </div>
+                                <div className="col-md-2 col-lg-2"></div>
+                            </div>
+                        </div>
+                    return headerToRender;
+                }
+            }
+
+            //BodySection class displays a checkout form for the user to fill-in the information and pay
+            class BodySection extends React.Component
+            {
+                constructor(props)
+                {
+                    super(props);
+                    this.state = {
+                        mentorName : this.props.mentorName,
+                        mentorRate : this.props.mentorRate,
+                        hoursRequired : 0,
+                        totalAmount : 0,
+                        nameOnCard:'',
+                        cardNumber:'',
+                        expiryDate:'',
+                        cvs:'',
+                        showAlert:false,
+                        showSuccess:true,
+                        alertDismiss:true,
+                        alertMessage:''
+                    }
+                }
+
+                render()
+                {
+                    var bodyToRender;
+
+                    bodyToRender = <div className="bodyContainer">
+                                        <div className="row">
+                                            <div className="col-md-12">
+                                                <h2 className="text-center">Hire Mentor</h2>
+                                            </div>
+                                        </div>
+                                        <div className="frmStyle">                         
+                                            <div className="row">
+                                                <div className="col-md-5 col-lg-4"></div>
+                                                <div className="col-md-5 col-lg-5 formContainer">
+                                                    <form className="initForm">
+                                                        <div id="alert" className={this.showAlert()} role="alert">
+                                                            {this.state.alertMessage}
+                                                            {this.createAlertDismissButton()}
+                                                        </div>
+                                                        <div className="form-group row">
+                                                            <div className="col-md-8 col-lg-8">
+                                                                <h4 className="paymentSectionTitle">Mentoring Required</h4>
+                                                            </div>
+                                                            <div className="col-md-4 col-lg-4"></div>
+                                                        </div>
+                                                        <div className="form-group row">
+                                                            <label className="col-md-4 col-lg-4 col-form-label" htmlFor="mentorName">Mentor's Name:</label>
+                                                            <div className="input-group col-md-7 col-lg-7">
+                                                                <input type="text" className="form-control" id="mentorName" name="mentorName" placeholder="Mentor's Name" value={this.state.mentorName} enabled="false" readOnly={true} />
+                                                            </div>
+                                                            <div className="col-md-0 col-lg-1"></div>
+                                                        </div>
+                                                        <div className="form-group row">
+                                                            <label className="col-md-4 col-lg-4 col-form-label" htmlFor="mentorRate">Mentor's Rate:</label>
+                                                            <div className="col-md-7 col-lg-7">
+                                                                <input type="text" className="form-control" id="mentorRate" name="mentorRate" placeholder="Mentor's Rate" value={this.state.mentorRate} enabled="false" readOnly={true} />                                                                
+                                                            </div>
+                                                            <div className="col-md-1 col-lg-1"></div>
+                                                        </div>
+                                                        <div className="form-group row">
+                                                            <label className="col-md-4 col-lg-4 col-form-label required" htmlFor="hoursRequired">Hours Required:</label>
+                                                            <div className="col-md-7 col-lg-7">
+                                                                <input type="text" className="form-control" id="hoursRequired" name="hoursRequired" placeholder="Hours" onChange={this.setHours.bind(this)}/>
+                                                            </div>
+                                                            <div className="col-md-1 col-lg-1"></div>
+                                                        </div>
+                                                        <div className="form-group row">
+                                                            <label className="col-md-4 col-lg-4 col-form-label" htmlFor="totalAmount">Total Amount:</label>
+                                                            <div className="col-md-7 col-lg-7">
+                                                                <input type="text" className="form-control" id="totalAmount" name="totalAmount" placeholder="0" value={this.state.totalAmount} enabled="false" readOnly={true}/>
+                                                            </div>
+                                                            <div className="col-md-1 col-lg-1"></div>
+                                                        </div>
+                                                        <hr/>
+                                                        <div className="form-group row">
+                                                            <div className="col-md-8 col-lg-8">
+                                                                <h4 className="paymentSectionTitle">Payment Information</h4>
+                                                            </div>
+                                                            <div className="col-md-4 col-lg-4"></div>
+                                                        </div>
+                                                        <div className="form-group row">
+                                                            <label className="col-md-4 col-lg-4 col-form-label required" htmlFor="nameOnCard">Name on Card:</label>
+                                                            <div className="col-md-7 col-lg-7">
+                                                                <input type="text" className="form-control" id="nameOnCard" name="nameOnCard" placeholder="Name on Card" onChange={this.setNameOnCard.bind(this)} />
+                                                            </div>
+                                                            <div className="col-md-1 col-lg-1"></div>
+                                                        </div>
+                                                        <div className="form-group row">
+                                                            <label className="col-md-4 col-lg-4 col-form-label required" htmlFor="cardNumber">Card Number:</label>
+                                                            <div className="col-md-7 col-lg-7">
+                                                                <input type="text" className="form-control" id="cardNumber" name="cardNumber" placeholder="Card Number" onChange={this.setCardNumber.bind(this)} />
+                                                            </div>
+                                                            <div className="col-md-1 col-lg-1"></div>
+                                                        </div>
+                                                        <div className="form-group row">
+                                                            <label className="col-md-4 col-lg-4 col-form-label required" htmlFor="expiryDate">Expiry Date:</label>
+                                                            <div className="col-md-4 col-lg-4">
+                                                                <input type="date" className="form-control" id="expiryDate" name="expiryDate" placeholder="Hours" onChange={this.setDate.bind(this)} />
+                                                            </div>
+                                                            <label className="col-md-1 col-lg-1 col-form-label required" htmlFor="cvs">CVS:</label>
+                                                            <div className="col-md-2 col-lg-2">
+                                                                <input type="text" className="form-control" id="cvs" name="cvs" placeholder="CVS" onChange={this.setCVS.bind(this)} />
+                                                            </div>
+                                                        </div>                                                       
+                                                        <div className="row">
+                                                            <div className="col-md-5 col-lg-5"></div>
+                                                            <div className="col-md-2 col-lg-2">
+                                                                <button type="button" className="btn btn-primary" onClick={this.showSuccessPayment.bind(this)} >Pay</button>
+                                                            </div>
+                                                            <div className="col-md-5 col-lg-5"></div>
+                                                        </div>
+                                                        
+
+                                                    </form>
+                                                </div>
+                                                <div className="col-md-2 col-lg-3"></div>                          
+                                            </div>
+                                        </div>                                                                                             
+                                    </div>
+
+
+
+                    return bodyToRender;
+                }
+
+                //This function will display the appropriate alert based on the current state
+                showAlert()
+                {
+                    var alertToRender;
+
+                    alertToRender = "alert ";
+
+                    if (!this.state.showSuccess)
+                        alertToRender += "alert-danger ";
+                    else
+                        alertToRender += "alert-success ";
+
+                    if (this.state.alertDismiss)
+                        alertToRender += "alert-dismissible ";
+                    else
+                        alertToRender += "";
+
+                    if (this.state.showAlert)
+                        alertToRender += "fade show";
+                    else
+                        alertToRender += "fade hide";
+                    
+                    return alertToRender;
+                }
+
+                //This function will hide the alert
+                hideAlert()
+                {
+                    var nextState  = this.state;
+                    nextState.showAlert = false;
+
+                    this.setState(nextState);
+                }
+
+                //This function will create a close button to the alert based on the current state
+                createAlertDismissButton()
+                {
+                    var toRender = <button type="button" className="close" aria-label="Close" onClick={this.hideAlert.bind(this)} >
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>;
+                    
+                    if (this.state.alertDismiss)
+                        return toRender;
+                    else
+                        return "";
+                
+                }
+                
+                //This function will handle the input entered in Hours Required input
+                //It will then compute Total Amount as Mentor's Rate * Hours Required
+                setHours(e)
+                {
+                    var nextState = this.state;
+                    var hoursSet = e.target.value;
+                    var hourSetInt = 0;
+                    var totalAmount = 0;
+
+                    if( (hoursSet !== ""))
+                    {
+                        if(Number.isNaN(Number(hoursSet)))
+                            hourSetInt = 0;
+                        else
+                            hourSetInt = Number(hoursSet);
+
+                        if(Number.isNaN(Number(hoursSet)))
+                        {
+                            nextState.alertMessage = e.target.placeholder + ' is not a number ';
+                            nextState.showAlert = true;
+                            nextState.showSuccess = false;
+                            nextState.alertDismiss = false;
+                        }
+                        else if( hoursSet <= 0)
+                        {
+                            nextState.alertMessage = e.target.placeholder + ' must be greater than 0 ';
+                            nextState.showAlert = true;
+                            nextState.showSuccess = false;
+                            nextState.alertDismiss = false;
+                        }
+                        else
+                        {
+                            nextState.alertMessage = "";
+                            nextState.showAlert = false;
+                        }
+                    }
+                    else
+                    {
+                        nextState.alertMessage = "";
+                        nextState.showAlert = false;
+                    } 
+                    
+                    nextState.hoursRequired = hourSetInt;
+                    nextState.totalAmount = hourSetInt * nextState.mentorRate;
+                    
+                    this.setState(nextState);
+                }
+
+                //The following functions will save the input entered in:
+                //1) Name on Card
+                //2) Card Number
+                //3) Expiry Date
+                //4) CVS
+                setNameOnCard(e)
+                {
+                    var nextState  = this.state;
+                    nextState.nameOnCard = e.target.value;
+                    this.setState(nextState);
+                }
+
+                setCardNumber(e)
+                {
+                    var nextState  = this.state;
+                    nextState.cardNumber = e.target.value;
+                    this.setState(nextState);
+                }
+
+                setDate(e)
+                {
+                    var nextState  = this.state;
+                    nextState.expiryDate = e.target.value;
+                    this.setState(nextState);
+                }
+
+                setCVS(e)
+                {
+                    var nextState  = this.state;
+                    nextState.cvs = e.target.value;
+                    this.setState(nextState);
+                }
+
+                //This function will display an alert that the payment has been processed
+                showSuccessPayment()
+                {
+                    var nextState  = this.state;
+                    var msg = "";
+
+                    msg = this.validateInputFields(nextState);
+
+                    if (msg != "")
+                    {
+                        nextState.alertMessage = msg;
+                        nextState.showSuccess = false;
+                        nextState.alertDismiss = false;
+                    }
+                    else
+                    {
+                        nextState.alertMessage = "Payment was completed successfully. A confirmation email was sent to you with instructions on how to contact the mentor";
+                        nextState.showSuccess = true;
+                        nextState.alertDismiss = true;
+                    }
+                        
+                    nextState.showAlert = true;
+                    this.setState(nextState);
+                }
+
+                validateInputFields(currState)
+                {
+                    if(currState.hoursRequired <= 0)
+                        return "Hours Required must have a value greater than 0";
+                    if(currState.nameOnCard == "")
+                        return "Name on Card cannot be empty";
+                    if(currState.cardNumber == "")
+                        return "Card Number cannot be empty";
+                    if(currState.expiryDate == "")
+                        return "Expiry cannot be empty";
+                    if(currState.cvs == "")
+                        return "CVS cannot be empty";
+
+                    return "";
+                }
+            }
+
+            //FooterSection class is for cosmetics only. It creates a small banner at the bottom of the page          
+            class FooterSection extends React.Component{
+                constructor(props)
+                {
+                    super(props);
+                }
+
+                render()
+                {
+                    var footerToRender;
+
+                    footerToRender = <footer className="footerContainer">
+                        <div className="row"><div className="footer col-md-12"></div></div>
+                    </footer>;
+                    
+                    return footerToRender;
+                }
+            }
+
+            ReactDOM.render(
+                <App/>,
+                document.getElementById('root2')
+            );
+        </script>
+    </body>
+</html>    
